@@ -15,6 +15,7 @@ const authenticate = (req, res, next) => {
         // add userID to body
       const userID = decoded.userID;
       req.body.userID = userID;
+      req.body.address = decoded.address;
       next();
     } else {
       res.send("Please Login First");

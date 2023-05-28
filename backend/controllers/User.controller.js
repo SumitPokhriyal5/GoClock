@@ -6,7 +6,7 @@ const User = require("../models/User.model");
 // Register a new user
 exports.registerUser = async (req, res) => {
   try {
-    const { username, password, role } = req.body;
+    const { username, password, address, role } = req.body;
 
     // Check if the username already exists
     const existingUser = await User.findOne({ username });
@@ -21,6 +21,7 @@ exports.registerUser = async (req, res) => {
     const user = new User({
       username,
       password: hashedPassword,
+      address,
       role,
     });
 
@@ -51,7 +52,7 @@ exports.loginUser = async (req, res) => {
       }
   
       // Generate a JSON Web Token (JWT)
-      const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY);
+      const token = jwt.sign({ userId: user._id , address: user.address }, process.env.SECRET_KEY);
   
       res.status(200).json({ token });
     } catch (error) {

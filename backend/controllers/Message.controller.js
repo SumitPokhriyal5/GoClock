@@ -3,11 +3,35 @@ const Message = require("../models/Message.model");
 // Create a new message
 exports.createMessage = async (req, res) => {
   try {
-    const {userID, orderID, to, from, quantity, address, transporter } = req.body;
+    const {userID, to, from, quantity, address, transporter } = req.body;
+
+    // function for generating random string
+    function generateRandomString() {
+      const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      const numbers = '0123456789';
+    
+      let result = '';
+    
+      // Generate the first three characters (alphabets)
+      for (let i = 0; i < 3; i++) {
+        const randomIndex = Math.floor(Math.random() * alphabet.length);
+        result += alphabet.charAt(randomIndex);
+      }
+    
+      // Generate the next two characters (numbers)
+      for (let i = 0; i < 2; i++) {
+        const randomIndex = Math.floor(Math.random() * numbers.length);
+        result += numbers.charAt(randomIndex);
+      }
+    
+      return result;
+    }
+    
+    // Example usage
+    const randomString = generateRandomString();    
 
     const message = new Message({
-      userID,
-      orderID,
+      orderID: randomString,
       to,
       from,
       quantity,
