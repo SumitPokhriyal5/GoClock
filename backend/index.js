@@ -4,6 +4,7 @@ const dotenv = require("dotenv");
 const userRouter = require("./routes/User.router");
 const messageRouter = require("./routes/Message.router");
 const connection = require("./config/db");
+const authenticate = require("./middlewares/Auth.middleware");
 
 dotenv.config();
 
@@ -16,6 +17,7 @@ app.use(express.json());
 
 // API Routes
 app.use("/user", userRouter);
+app.use(authenticate)
 app.use("/message", messageRouter);
 
 // Start the server
@@ -26,5 +28,5 @@ app.listen(port, async() => {
     } catch (error) {
         console.log('Cannot connect to DB:', error);
     }
-  console.log(`Server is running on port ${port}`);
+  console.log(`Server is running on: http://localhost:${port}`);
 });

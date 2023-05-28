@@ -6,12 +6,12 @@ const User = require("../models/User.model");
 // Register a new user
 exports.registerUser = async (req, res) => {
   try {
-    const { email, password, role } = req.body;
+    const { username, password, role } = req.body;
 
-    // Check if the email already exists
-    const existingUser = await User.findOne({ email });
+    // Check if the username already exists
+    const existingUser = await User.findOne({ username });
     if (existingUser) {
-      return res.status(400).json({ message: "Email already exists" });
+      return res.status(400).json({ message: "Username already exists" });
     }
 
     // Hash the password
@@ -19,7 +19,7 @@ exports.registerUser = async (req, res) => {
 
     // Create a new user
     const user = new User({
-      email,
+      username,
       password: hashedPassword,
       role,
     });

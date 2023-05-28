@@ -3,15 +3,17 @@ const Message = require("../models/Message.model");
 // Create a new message
 exports.createMessage = async (req, res) => {
   try {
-    const { orderID, to, from, quantity, address, transporter } = req.body;
+    const {userID, orderID, to, from, quantity, address, transporter } = req.body;
 
     const message = new Message({
+      userID,
       orderID,
       to,
       from,
       quantity,
       address,
       transporter,
+      sent: false
     });
 
     // Save the message to the database
