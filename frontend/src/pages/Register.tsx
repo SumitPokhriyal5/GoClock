@@ -1,8 +1,11 @@
-import React from 'react'
-
+import RegisterForm from "../components/Auth/RegisterForm"
+import '../scss/register.scss'
 const Register = () => {
   return (
-    <div>Register</div>
+    <div className="register">
+      <h1>Register</h1>
+      <RegisterForm />
+    </div>
   )
 }
 

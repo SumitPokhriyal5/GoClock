@@ -6,3 +6,9 @@ export interface IUserState {
     token: string;
 }
 
+export interface IUserRegister {
+    username: string;
+    password: string;
+    address: string;
+    role: "Manufacturer" | "Transporter";
+}
