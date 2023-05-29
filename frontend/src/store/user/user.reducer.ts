@@ -1,3 +1,5 @@
+import { Reducer } from "@reduxjs/toolkit";
+
 import { IUserData } from "../../types/user.types";
 import { ERROR_USER_DATA, GET_USER_DATA, LOADING_USER_DATA } from "./user.type"
 interface IUserState {
@@ -19,7 +21,7 @@ const initialState : IUserState = {
     }
 }
 
-export const userReducer = ( state = initialState , { type , payload } : { type: string , payload: string | null }) => {
+export const userReducer: Reducer<IUserState> = ( state = initialState , { type , payload } ) => {
     switch( type ){
         case GET_USER_DATA: {
             return {
