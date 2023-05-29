@@ -19,7 +19,7 @@ const initialState : IUserState = {
     }
 }
 
-export const userReducer = ( state = initialState , { type , payload }) => {
+export const userReducer = ( state = initialState , { type , payload } : { type: string , payload: string | null }) => {
     switch( type ){
         case GET_USER_DATA: {
             return {
