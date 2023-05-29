@@ -1,14 +1,15 @@
-import { configureStore } from '@reduxjs/toolkit'
+import { applyMiddleware, combineReducers, compose, legacy_createStore } from '@reduxjs/toolkit'
 import { userReducer } from './user/user.reducer'
 import { messagesReducer } from './messages/messages.reducer'
-// ...
+import thunk from 'redux-thunk'
 
-export const store = configureStore({
-  reducer: {
+const rootReducer = combineReducers({
     user: userReducer,
     messages: messagesReducer
-  },
 })
+
+
+export const store = legacy_createStore(rootReducer, compose(applyMiddleware(thunk)))
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>

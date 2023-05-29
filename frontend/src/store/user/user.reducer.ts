@@ -1,33 +1,29 @@
 import { Reducer } from "@reduxjs/toolkit";
 
-import { IUserData } from "../../types/user.types";
-import { ERROR_USER_DATA, GET_USER_DATA, LOADING_USER_DATA } from "./user.type"
-interface IUserState {
-    loading: boolean;
-    error: boolean | string;
-    isAuth: boolean;
-    userData: IUserData;
-}
+import { ERROR_USER_DATA, LOADING_USER_DATA, LOGIN_USER, LOGOUT_USER } from "./user.type"
+import { IUserState } from "../../types/user.types";
 
 const initialState : IUserState = {
     loading: false,
     error: false,
     isAuth: false,
-    userData: {
-        username: "",
-        password: "",
-        address: "",
-        role: ""
-    }
+    token: "",
 }
 
 export const userReducer: Reducer<IUserState> = ( state = initialState , { type , payload } ) => {
     switch( type ){
-        case GET_USER_DATA: {
+        case LOGIN_USER: {
             return {
                 ...state,
                 loading: false,
-                userData: payload
+                isAuth:true,
+                token: payload
+            }
+        }
+
+        case LOGOUT_USER: {
+            return {
+                ...initialState
             }
         }
 
