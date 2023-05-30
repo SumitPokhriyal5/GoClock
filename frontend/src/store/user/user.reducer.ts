@@ -1,6 +1,6 @@
 import { Reducer } from "@reduxjs/toolkit";
 
-import { ERROR_USER_DATA, LOADING_USER_DATA, LOGIN_USER, LOGOUT_USER, REGISTER_USER } from "./user.type"
+import { ERROR_USER_DATA, LOADING_USER_DATA, LOGIN_USER, LOGOUT_USER } from "./user.type"
 import { IUserState } from "../../types/user.types";
 
 const initialState : IUserState = {
@@ -8,19 +8,10 @@ const initialState : IUserState = {
     error: false,
     isAuth: false,
     token: "",
-    serverMessage: ""
 }
 
 export const userReducer: Reducer<IUserState> = ( state = initialState , { type , payload } ) => {
     switch( type ){
-        case REGISTER_USER: {
-            return {
-                ...state,
-                loading: false,
-                error: false,
-                serverMessage: payload
-            }
-        }
         case LOGIN_USER: {
             return {
                 ...state,
@@ -48,7 +39,6 @@ export const userReducer: Reducer<IUserState> = ( state = initialState , { type 
                 ...state,
                 loading: false,
                 error: payload || true,
-                serverMessage:""
             }
         }
         default: return state

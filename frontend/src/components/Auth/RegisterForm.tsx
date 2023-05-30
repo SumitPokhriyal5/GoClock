@@ -1,19 +1,17 @@
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { registerUserApi } from "../../utils/api";
 import { IUserRegister } from "../../types/user.types";
-import { ThunkDispatch } from "redux-thunk";
-import { AnyAction } from "redux";
 import { Link } from "react-router-dom";
-import { RootState } from "../../store/store";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const RegisterForm: React.FC = () => {
-  const dispatch = useDispatch<ThunkDispatch<any, null, AnyAction>>();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [address, setAddress] = useState("");
   const [role, setRole] = useState<"Manufacturer" | "Transporter">("Manufacturer");
   const [load , setLoad] = useState(false)
+  const navigate = useNavigate();
+
   const handleRegister = async (e : React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault()
     const userData: IUserRegister = {
@@ -32,16 +30,17 @@ const RegisterForm: React.FC = () => {
       }
     }).then((res) => res.json()).then((res) => {
       setLoad(false)
+      toast.success(res.message)
+     if(res.message === 'User registered successfully')navigate('/login')
       console.log("res:",res)
     }).catch((err) => {
       setLoad(false)
-      console.log("error:",err)
+      toast.error(err.message)
     }
       )
   };
 
   return (
-
       <form>
         <div>
           <label htmlFor="username">Username:</label>

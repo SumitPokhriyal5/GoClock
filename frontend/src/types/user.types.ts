@@ -4,7 +4,6 @@ export interface IUserState {
     error: boolean | string;
     isAuth: boolean;
     token: string;
-    serverMessage: string;
 }
 
 export interface IUserRegister {
