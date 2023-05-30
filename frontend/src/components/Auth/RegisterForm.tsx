@@ -1,9 +1,11 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { registerUserApi } from "../../utils/api";
 import { IUserRegister } from "../../types/user.types";
 import { ThunkDispatch } from "redux-thunk";
 import { AnyAction } from "redux";
+import { Link } from "react-router-dom";
+import { RootState } from "../../store/store";
 
 const RegisterForm: React.FC = () => {
   const dispatch = useDispatch<ThunkDispatch<any, null, AnyAction>>();
@@ -11,7 +13,7 @@ const RegisterForm: React.FC = () => {
   const [password, setPassword] = useState("");
   const [address, setAddress] = useState("");
   const [role, setRole] = useState<"Manufacturer" | "Transporter">("Manufacturer");
-
+  const [load , setLoad] = useState(false)
   const handleRegister = async (e : React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault()
     const userData: IUserRegister = {
@@ -21,12 +23,21 @@ const RegisterForm: React.FC = () => {
       role,
     };
 
-    try {
-      await dispatch(registerUserApi(userData));
-      console.log('register successfull')
-    } catch (error) {
-      console.log("Registration failed:", error);
+    setLoad(true)
+    fetch(`${import.meta.env.VITE_REACT_URL}/user/register`,{
+      method: 'POST',
+      body: JSON.stringify(userData),
+      headers:{
+        'Content-type': 'application/json'
+      }
+    }).then((res) => res.json()).then((res) => {
+      setLoad(false)
+      console.log("res:",res)
+    }).catch((err) => {
+      setLoad(false)
+      console.log("error:",err)
     }
+      )
   };
 
   return (
@@ -38,6 +49,7 @@ const RegisterForm: React.FC = () => {
             type="text"
             id="username"
             value={username}
+            placeholder="Enter a Unique Username"
             onChange={(e:React.ChangeEvent<HTMLInputElement>) => setUsername(e.target.value)}
           />
         </div>
@@ -46,6 +58,7 @@ const RegisterForm: React.FC = () => {
           <input
             type="password"
             id="password"
+            placeholder="Enter your Password"
             value={password}
             onChange={(e:React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
           />
@@ -55,6 +68,7 @@ const RegisterForm: React.FC = () => {
           <input
             type="text"
             id="address"
+            placeholder="Enter your Address"
             value={address}
             onChange={(e:React.ChangeEvent<HTMLInputElement>) => setAddress(e.target.value)}
           />
@@ -70,8 +84,9 @@ const RegisterForm: React.FC = () => {
             <option value="Transporter">Transporter</option>
           </select>
         </div>
-        <button type="button" onClick={handleRegister}>
-          Register
+        <div>Existing User? <Link to={'/login'}>Login</Link></div>
+        <button disabled={load} type="button" onClick={handleRegister} className={load ? "loading" : ""}>
+          {load ? "Loading.." : "Register"}
         </button>
       </form>
   );

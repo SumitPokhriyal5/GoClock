@@ -4,18 +4,21 @@
 
 import axios from "axios"
 import { AppDispatch } from "../store/store"
-import { errorUserData, loadingUserData, loginUser } from "../store/user/user.action"
+import { errorUserData, loadingUserData, loginUser, registerUser } from "../store/user/user.action"
 import { IUserRegister } from "../types/user.types"
 
 // register user api
 export const registerUserApi = (data : IUserRegister ) => async( dispatch : AppDispatch) => {
     dispatch(loadingUserData())
     try {
-        await axios.post(`${import.meta.env.VITE_REACT_URL}/user/register`, {
+       const res = await axios.post(`${import.meta.env.VITE_REACT_URL}/user/register`, {
             ...data
         })
+        console.log(res)
+        dispatch(registerUser(res.data.message))
     } catch (error: any) {
-        dispatch(errorUserData(error.message))
+        console.log(error.response.data.message)
+        dispatch(errorUserData(error.response.data.message))
     }
 }
 

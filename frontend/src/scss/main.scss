@@ -1,10 +1,26 @@
 * {
-	box-sizing: border-box;
-	margin: 0;
-	padding: 0;	
-	font-family: Raleway, sans-serif;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: Raleway, sans-serif;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
 }
 
 body {
-	background: linear-gradient(90deg, #C7C5F4, #776BCC);		
+  font: 1em/1.618 Inter, sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 100vh;
+  padding: 30px;
+
+  color: #224;
+  background: url('/background-image.jfif') center /
+    cover no-repeat fixed;
 }

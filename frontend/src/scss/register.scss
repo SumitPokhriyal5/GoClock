@@ -1,28 +1,26 @@
+
 .register {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 35px;
+  border: 1px solid rgba(255, 255, 255, .25);
+  border-radius: 20px;
+  background-color: rgba(255, 255, 255, 0.45);
+  box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(15px);
     
     h1 {
       font-size: 24px;
       margin-bottom: 20px;
       color: #fff;
+      text-align: center;
     }
   }
   
   form {
-    width: 400px;
-    max-width: 100%;
-    padding: 90px;
-    background-color: rgba(255, 255, 255, 0.5);
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  
     div {
       margin-bottom: 15px;
-  
       label {
         font-size: 16px;
         font-weight: bold;
@@ -50,6 +48,10 @@
       cursor: pointer;
       transition: background-color 0.3s;
       position: relative;
+
+      &:disabled{
+        background-color: #72777d;
+      }
   
       &:hover {
         background-color: #0056b3;
@@ -59,7 +61,7 @@
         content: "";
         position: absolute;
         top: 50%;
-        left: 50%;
+        left: 65%;
         transform: translate(-50%, -50%);
         display: none;
         width: 12px;
