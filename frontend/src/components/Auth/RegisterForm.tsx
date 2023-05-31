@@ -30,8 +30,12 @@ const RegisterForm: React.FC = () => {
       }
     }).then((res) => res.json()).then((res) => {
       setLoad(false)
-      toast.success(res.message)
-     if(res.message === 'User registered successfully')navigate('/login')
+      
+     if(res.message === 'User registered successfully'){
+      toast.success("Congratulation you've successfully Signed Up.")
+      navigate('/login')
+     }
+     else toast.error(res.message)
       console.log("res:",res)
     }).catch((err) => {
       setLoad(false)

@@ -17,6 +17,7 @@ export const userReducer: Reducer<IUserState> = ( state = initialState , { type 
                 ...state,
                 loading: false,
                 isAuth:true,
+                error:false,
                 token: payload
             }
         }
