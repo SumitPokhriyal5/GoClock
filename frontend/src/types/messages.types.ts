@@ -1,5 +1,6 @@
 
 export interface IMessages {
+    _id?: string
     orderID?: string
     to: string;
     from: string;

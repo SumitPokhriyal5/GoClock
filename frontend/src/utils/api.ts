@@ -18,7 +18,6 @@ export const loginUserApi = (data: IUserLogin) => async( dispatch : AppDispatch 
         const res = await axios.post(`${import.meta.env.VITE_REACT_URL}/user/login` , {
             ...data
         })
-        console.log(res)
         dispatch(loginUser(res.data))
     }
     catch(error: any){
@@ -39,26 +38,39 @@ const axiosConfig: AxiosRequestConfig = {
     },
   };
 
+//   get message api
 export const getMessageApi = () =>async (dispatch : AppDispatch) => {
     dispatch(loadingMessages());
     try {
         const res = await axios.get(`${import.meta.env.VITE_REACT_URL}/message` , axiosConfig)
-        console.log(res.data.messages);
         dispatch(getMessages(res.data.messages))
     } catch (error : any) {
         dispatch(errorMessages(error.message))
     }
 }
 
+
+//  post message api
 export const postMessageApi = (data : IMessages) =>async (dispatch : AppDispatch) => {
     dispatch(loadingMessages());
     try {
-        const res = await axios.post(`${import.meta.env.VITE_REACT_URL}/message` , {
+        await axios.post(`${import.meta.env.VITE_REACT_URL}/message` , {
             ...data
         } , axiosConfig)
-        console.log(res);
         dispatch<any>(getMessageApi())
     } catch (error : any) {
         dispatch(errorMessages(error.message))
+    }
+}
+
+// send payment api
+export const paymentMessageApi = (amount:number , id:string) => async (dispatch:AppDispatch) => {
+    try {
+        await axios.post(`${import.meta.env.VITE_REACT_URL}/message/send/${id}` , {
+            price: amount
+        },axiosConfig)
+        dispatch<any>(getMessageApi())
+    } catch (error) {
+        console.log(error)
     }
 }

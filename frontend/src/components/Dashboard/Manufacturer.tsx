@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import '../../scss/auth.scss'
 import { IUserRegister } from "../../types/user.types";
-import { postMessageApi } from "../../utils/api";
+import { getMessageApi, postMessageApi } from "../../utils/api";
 import { IMessages } from "../../types/messages.types";
 
 const Manufacturer: React.FC = () => {
@@ -13,7 +13,7 @@ const Manufacturer: React.FC = () => {
   const [quantity, setQuantity] = useState(1);
   const [transporter, setTransporter] = useState("");
   const [allUsers , setAllUsers] = useState<IUserRegister[]>([])
-  const { loading, error } = useSelector(
+  const { messages, loading, error } = useSelector(
     (state: RootState) => state.messages
   );
 
@@ -38,9 +38,9 @@ const Manufacturer: React.FC = () => {
     setTransporter("");
   };
 
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
+  useEffect(() => {
+    dispatch(getMessageApi())
+  },[messages])
 
   const filteredUser = allUsers.filter((el) => el.role !== "Manufacturer")
   return (
@@ -94,6 +94,27 @@ const Manufacturer: React.FC = () => {
           Send Message
         </button>
       </form>
+      <div className="messages">
+      <h3>Messages:</h3>
+      {messages?.length > 0 ? (
+        <div className="message-container">
+          {messages.map((message) => (
+            <div className="message-row" key={message.orderID}>
+              <p><span>Order ID:</span> {message.orderID}</p>
+              <p><span>To:</span> {message.to}</p>
+              <p><span>From:</span> {message.from}</p>
+              <p><span>Quantity:</span> {message.quantity}</p>
+              <p><span>Address:</span> {message.address}</p>
+              <p><span>Transporter:</span> {message.transporter}</p>
+              <p><span>Payment:</span>{message.sent ? `Done (${message.price})` : "Not Done"}</p>
+            </div>
+          ))}
+           
+        </div>
+      ) : (
+        <p>No Messages Found</p>
+      )}
+      </div>
     </div>
   );
 };
