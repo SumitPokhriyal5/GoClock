@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IUserLogin } from "../../types/user.types";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../store/store";
+import { RootState } from "../../store/store";
 import { loginUserApi } from "../../utils/api";
 import { ThunkDispatch } from "redux-thunk";
 import { AnyAction } from "redux";
@@ -12,7 +12,7 @@ import { AnyAction } from "redux";
 const LoginForm: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const { loading , error , isAuth , token } = useSelector((state: RootState) => state.user)
+  const { loading , error , isAuth , token , user } = useSelector((state: RootState) => state.user)
   const dispatch = useDispatch<ThunkDispatch<any, null, AnyAction>>()
   const navigate = useNavigate();
 
@@ -23,14 +23,18 @@ const LoginForm: React.FC = () => {
       password,
     };
     await dispatch(loginUserApi(userData))
-    console.log(token, isAuth)
-    if(error)toast.error(error)
   };
 
-  if(isAuth){
-    toast.success('Login Successful')
-    navigate('/')
-  }
+  useEffect(() => {
+    localStorage.setItem("isAuth" , JSON.stringify(isAuth))
+    localStorage.setItem("token" , JSON.stringify(token))
+    localStorage.setItem('user', JSON.stringify(user))
+    if(isAuth){
+      toast.success('Login Successful')
+      navigate('/')
+    }
+    else if(error)toast.error(error);
+  },[isAuth,error])
 
   return (
       <form>
@@ -54,7 +58,7 @@ const LoginForm: React.FC = () => {
             onChange={(e:React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
           />
         </div>
-        <div>Existing User? <Link to={'/register'}>Sign Up</Link></div>
+        <div>New User? <Link to={'/register'}>Sign Up</Link></div>
         <button disabled={loading} type="button" onClick={handleLogin} className={loading ? "loading" : ""}>
           {loading ? "Loading.." : "Login"}
         </button>

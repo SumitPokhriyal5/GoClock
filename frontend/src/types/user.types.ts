@@ -4,6 +4,11 @@ export interface IUserState {
     error: boolean | string;
     isAuth: boolean;
     token: string;
+    user: {
+        username: string;
+        address: string;
+        role: string;
+    }
 }
 
 export interface IUserLogin {

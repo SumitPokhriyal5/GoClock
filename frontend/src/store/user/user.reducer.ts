@@ -8,6 +8,11 @@ const initialState : IUserState = {
     error: false,
     isAuth: false,
     token: "",
+    user: {
+        username: "",
+        address: "",
+        role: ""
+    }
 }
 
 export const userReducer: Reducer<IUserState> = ( state = initialState , { type , payload } ) => {
@@ -18,7 +23,8 @@ export const userReducer: Reducer<IUserState> = ( state = initialState , { type 
                 loading: false,
                 isAuth:true,
                 error:false,
-                token: payload
+                token: payload.token,
+                user: payload.user
             }
         }
 

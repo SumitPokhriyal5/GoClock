@@ -20,7 +20,7 @@ export const messagesReducer: Reducer<IMessageState> = ( state = initialState , 
             return {
                 ...state,
                 loading: false,
-                userData: payload
+                messages: payload
             }
         }
 
