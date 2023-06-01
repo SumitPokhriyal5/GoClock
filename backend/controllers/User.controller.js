@@ -54,8 +54,17 @@ exports.loginUser = async (req, res) => {
       // Generate a JSON Web Token (JWT)
       const token = jwt.sign({ userId: user._id , address: user.address }, process.env.SECRET_KEY);
   
-      res.status(200).json({ token });
+      res.status(200).json({ token , user});
     } catch (error) {
       res.status(500).json({ message: "Failed to login", error });
     }
   };
+
+  exports.getUser = async (req , res) => {
+    try {
+      const allUsers = await User.find();
+      res.status(200).json({ allUsers })
+    } catch (error) {
+      res.status(500).json({error})
+    }
+  }
