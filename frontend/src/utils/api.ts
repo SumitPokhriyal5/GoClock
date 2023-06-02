@@ -2,7 +2,7 @@
 
 /* user api */
 
-import axios, { AxiosRequestConfig } from "axios"
+import axios from "axios"
 import { AppDispatch } from "../store/store"
 import { errorUserData, loadingUserData, loginUser } from "../store/user/user.action"
 import { IUserLogin } from "../types/user.types"
