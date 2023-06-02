@@ -21,9 +21,9 @@ const Manufacturer: React.FC<ManufacturerProps> = ({ token }) => {
   const [transporter, setTransporter] = useState("");
   const [allUsers, setAllUsers] = useState<IUserRegister[]>([]);
   const { messages } = useSelector((state: RootState) => state.messages);
-  const [searchOrderID, setSearchOrderID] = useState("");
+  const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(4);
+  const [itemsPerPage] = useState(4);
 
   useEffect(() => {
     const curUser = localStorage.getItem("user");
@@ -48,7 +48,7 @@ const Manufacturer: React.FC<ManufacturerProps> = ({ token }) => {
     setLoad(true);
     await dispatch(postMessageApi(messageData, token));
     setLoad(false);
-    toast.success("Message Added")
+    toast.success("Message Added");
     setTo("");
     setFrom("");
     setQuantity(1);
@@ -63,7 +63,9 @@ const Manufacturer: React.FC<ManufacturerProps> = ({ token }) => {
   const filteredMessages = messages?.filter(
     (el: IMessages) =>
       el.userID === user?._id &&
-      el.orderID?.toLowerCase().includes(searchOrderID.toLowerCase()) // Filter by orderID
+      (el.orderID?.toLowerCase().includes(search.toLowerCase()) ||
+        el.to?.toLowerCase().includes(search.toLowerCase()) ||
+        el.from?.toLowerCase().includes(search.toLowerCase())) 
   );
 
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -135,13 +137,13 @@ const Manufacturer: React.FC<ManufacturerProps> = ({ token }) => {
       </form>
       <div className="messages">
         <h3>Messages:</h3>
-        <div className="search-by-orderID">
-          <label htmlFor="orderID">Search by Order ID:</label>
+        <div className="search">
           <input
             type="text"
-            id="orderID"
-            value={searchOrderID}
-            onChange={(e) => setSearchOrderID(e.target.value)}
+            id="search"
+            value={search}
+            placeholder="Search by OrderId, To or From"
+            onChange={(e) => setSearch(e.target.value)}
           />
         </div>
         {paginatedMessages?.length > 0 ? (
@@ -198,5 +200,3 @@ const Manufacturer: React.FC<ManufacturerProps> = ({ token }) => {
 };
 
 export default Manufacturer;
-
-

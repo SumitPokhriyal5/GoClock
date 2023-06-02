@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 const Transporter: FC<{ token: string }> = ({ token }) => {
   const [amount, setAmount] = useState(0);
   const [load, setLoad] = useState(false);
-  const [searchOrderID, setSearchOrderID] = useState("");
+  const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [messagesPerPage] = useState(4);
 
@@ -30,7 +30,9 @@ const Transporter: FC<{ token: string }> = ({ token }) => {
 
   // Search messages by Order ID
   const filteredMessages = filterMessages?.filter((el) =>
-    el.orderID?.toLowerCase().includes(searchOrderID.toLowerCase())
+  (el.orderID?.toLowerCase().includes(search.toLowerCase()) ||
+  el.to?.toLowerCase().includes(search.toLowerCase()) ||
+  el.from?.toLowerCase().includes(search.toLowerCase())) 
   );
 
   // Pagination
@@ -53,13 +55,13 @@ const Transporter: FC<{ token: string }> = ({ token }) => {
   return (
     <div className="transporter">
       <div className="messages">
-        <div className="search-by-orderID">
-          <label htmlFor="searchOrderID">Search by Order ID:</label>
+        <div className="search">
           <input
             type="text"
-            id="searchOrderID"
-            value={searchOrderID}
-            onChange={(e) => setSearchOrderID(e.target.value)}
+            id="search"
+            value={search}
+            placeholder="Search by OrderID, To or From"
+            onChange={(e) => setSearch(e.target.value)}
           />
         </div>
         <h2>Messages:</h2>

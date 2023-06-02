@@ -1,8 +1,11 @@
+import "../scss/PageNotFound.scss";
 
 const PageNotFound = () => {
   return (
-    <div>PageNotFound</div>
-  )
-}
+    <div className="page-not-found">
+      <h1>Page Not Found</h1>
+    </div>
+  );
+};
 
-export default PageNotFound
+export default PageNotFound;
