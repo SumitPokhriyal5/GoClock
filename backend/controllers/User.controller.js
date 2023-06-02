@@ -52,7 +52,7 @@ exports.loginUser = async (req, res) => {
       }
   
       // Generate a JSON Web Token (JWT)
-      const token = jwt.sign({ userId: user._id , address: user.address }, process.env.SECRET_KEY);
+      const token = jwt.sign({ userID: user._id , address: user.address }, process.env.SECRET_KEY);
   
       res.status(200).json({ token , user});
     } catch (error) {

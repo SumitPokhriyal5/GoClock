@@ -28,21 +28,18 @@ export const loginUserApi = (data: IUserLogin) => async( dispatch : AppDispatch 
 
 /* messages api */
 
-const token = localStorage.getItem("token");
-const parsedToken = token ? JSON.parse(token) : "";
 
-const axiosConfig: AxiosRequestConfig = {
-    headers: {
-      Authorization: parsedToken, 
-      "Content-Type": "application/json",
-    },
-  };
 
 //   get message api
-export const getMessageApi = () =>async (dispatch : AppDispatch) => {
+export const getMessageApi = (token:string) =>async (dispatch : AppDispatch) => {
     dispatch(loadingMessages());
     try {
-        const res = await axios.get(`${import.meta.env.VITE_REACT_URL}/message` , axiosConfig)
+        const res = await axios.get(`${import.meta.env.VITE_REACT_URL}/message` , {
+            headers: {
+              Authorization: token, 
+              "Content-Type": "application/json",
+            }
+          })
         dispatch(getMessages(res.data.messages))
     } catch (error : any) {
         dispatch(errorMessages(error.message))
@@ -51,25 +48,35 @@ export const getMessageApi = () =>async (dispatch : AppDispatch) => {
 
 
 //  post message api
-export const postMessageApi = (data : IMessages) =>async (dispatch : AppDispatch) => {
+export const postMessageApi = (data : IMessages , token: string) =>async (dispatch : AppDispatch) => {
     dispatch(loadingMessages());
     try {
         await axios.post(`${import.meta.env.VITE_REACT_URL}/message` , {
             ...data
-        } , axiosConfig)
-        dispatch<any>(getMessageApi())
+        } , {
+            headers: {
+              Authorization: token, 
+              "Content-Type": "application/json",
+            }
+          })
+        dispatch<any>(getMessageApi(token))
     } catch (error : any) {
         dispatch(errorMessages(error.message))
     }
 }
 
 // send payment api
-export const paymentMessageApi = (amount:number , id:string) => async (dispatch:AppDispatch) => {
+export const paymentMessageApi = (amount:number , id:string , token : string) => async (dispatch:AppDispatch) => {
     try {
         await axios.post(`${import.meta.env.VITE_REACT_URL}/message/send/${id}` , {
             price: amount
-        },axiosConfig)
-        dispatch<any>(getMessageApi())
+        },{
+            headers: {
+              Authorization: token, 
+              "Content-Type": "application/json",
+            },
+          })
+        dispatch<any>(getMessageApi(token))
     } catch (error) {
         console.log(error)
     }

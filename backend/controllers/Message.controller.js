@@ -31,6 +31,7 @@ exports.createMessage = async (req, res) => {
     const randomString = generateRandomString();    
 
     const message = new Message({
+      userID,
       orderID: randomString,
       to,
       from,
@@ -39,6 +40,7 @@ exports.createMessage = async (req, res) => {
       transporter,
       sent: false
     });
+    
 
     // Save the message to the database
     await message.save();

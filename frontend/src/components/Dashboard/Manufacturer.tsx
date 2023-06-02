@@ -6,32 +6,41 @@ import { IUserRegister } from "../../types/user.types";
 import { getMessageApi, postMessageApi } from "../../utils/api";
 import { IMessages } from "../../types/messages.types";
 
-const Manufacturer: React.FC = () => {
+const Manufacturer: React.FC<{token:string}> = ({token}) => {
   const dispatch = useDispatch<any>();
   const [to, setTo] = useState("");
   const [from, setFrom] = useState("");
+  const [user , setUser] = useState<any>({})
   const [quantity, setQuantity] = useState(1);
+  const [load , setLoad] = useState(false)
   const [transporter, setTransporter] = useState("");
   const [allUsers , setAllUsers] = useState<IUserRegister[]>([])
-  const { messages, loading, error } = useSelector(
+  const { messages } = useSelector(
     (state: RootState) => state.messages
   );
+  useEffect(() => {
+    const curUser = localStorage.getItem("user");
+    const parsedUser = curUser ? JSON.parse(curUser) : {};
+    setUser(parsedUser)
+  },[])
 
-  const user = localStorage.getItem("user");
-  const parsedUser = user ? JSON.parse(user) : {};
+
+  
 
   useEffect(() => {
     fetch(`${import.meta.env.VITE_REACT_URL}/user`).then((res) => res.json()).then((res) => setAllUsers(res.allUsers)).catch((err) => console.log(err));
   }, []);
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     const messageData : IMessages = {
       to,
       from,
       quantity,
       transporter,
     };
-    dispatch(postMessageApi(messageData))
+    setLoad(true)
+    await dispatch(postMessageApi(messageData , token))
+    setLoad(false)
     setTo("");
     setFrom("");
     setQuantity(1);
@@ -39,10 +48,11 @@ const Manufacturer: React.FC = () => {
   };
 
   useEffect(() => {
-    dispatch(getMessageApi())
+    dispatch(getMessageApi(token))
   },[messages])
 
-  const filteredUser = allUsers.filter((el) => el.role !== "Manufacturer")
+  const filteredUser = allUsers?.filter((el) => el.role !== "Manufacturer")
+  const filteredMessages = messages?.filter((el : IMessages) => el.userID === user?._id)
   return (
     <div className="manufacture">
       <form>
@@ -90,23 +100,23 @@ const Manufacturer: React.FC = () => {
             ))}
           </select>
         </div>
-        <button type="button" onClick={handleSendMessage}>
-          Send Message
+        <button type="button" onClick={handleSendMessage} className={load ? "loading" : ""}>
+        {load ? "Loading.." : "Send Message"}
         </button>
       </form>
       <div className="messages">
       <h3>Messages:</h3>
-      {messages?.length > 0 ? (
+      {filteredMessages?.length > 0 ? (
         <div className="message-container">
-          {messages.map((message) => (
+          {filteredMessages.map((message) => (
             <div className="message-row" key={message.orderID}>
-              <p><span>Order ID:</span> {message.orderID}</p>
-              <p><span>To:</span> {message.to}</p>
-              <p><span>From:</span> {message.from}</p>
-              <p><span>Quantity:</span> {message.quantity}</p>
-              <p><span>Address:</span> {message.address}</p>
-              <p><span>Transporter:</span> {message.transporter}</p>
-              <p><span>Payment:</span>{message.sent ? `Done (${message.price})` : "Not Done"}</p>
+              <p><span>Order ID: </span> {message.orderID}</p>
+              <p><span>To: </span> {message.to}</p>
+              <p><span>From: </span> {message.from}</p>
+              <p><span>Quantity: </span> {message.quantity}</p>
+              <p><span>Address: </span> {message.address}</p>
+              <p><span>Transporter: </span> {message.transporter}</p>
+              <p><span>Payment: </span>{message.sent ? `Done (${message.price}$)` : "Pending"}</p>
             </div>
           ))}
            

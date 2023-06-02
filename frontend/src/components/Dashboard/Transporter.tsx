@@ -1,12 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState , FC } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import { getMessageApi, paymentMessageApi } from "../../utils/api";
 import { IMessages } from "../../types/messages.types";
+import { toast } from "react-toastify";
 
-const Transporter = () => {
+const Transporter: FC<{token:string}> = ({token}) => {
   const [amount , setAmount] = useState(0);
-  const { messages, loading, error } = useSelector(
+  const [load , setLoad] = useState(false)
+  const { messages } = useSelector(
     (state: RootState) => state.messages
   );
 
@@ -16,23 +18,26 @@ const Transporter = () => {
   const parsedUser = user ? JSON.parse(user) : {};
 
   useEffect(() => {
-    dispatch(getMessageApi());
+    dispatch(getMessageApi(token));
   }, [messages]);
 
   const filterMessages = messages?.filter(
     (el: IMessages) => el.transporter === parsedUser.username
   );
 
-  const handlePayment = (id: any) => {
+  const handlePayment = async (id: any) => {
     console.log(id)
-    dispatch(paymentMessageApi(amount, id));
+    setLoad(true)
+    await dispatch(paymentMessageApi(amount, id , token));
+    setLoad(false)
+    toast.success("Payment done Successfully")
   };
 
   return (
     <div className="transporter">
       <div className="messages">
         <h2>Messages:</h2>
-        <div className="message-container">
+        {filterMessages?.length > 0 ? <div className="message-container">
           {filterMessages?.map((el) => (
             <div className="message-row" key={el._id}>
               <p>
@@ -51,7 +56,7 @@ const Transporter = () => {
                 <span>Address:</span> {el.address}
               </p>
               {el.sent ? (
-                <div>Payment Done</div>
+                <div>Payment Done ✔</div>
               ) : (
                 <div>
                   <input
@@ -59,12 +64,14 @@ const Transporter = () => {
                     placeholder="payment amount"
                     onChange={(e) => setAmount(Number(e.target.value))}
                   />
-                  <button onClick={() => handlePayment(el._id)}>send</button>
+                  <button onClick={() => handlePayment(el._id)} className={load ? "loading" : ""}>{load ? "Wait" : "Send"}</button>
                 </div>
               )}
             </div>
           ))}
-        </div>
+        </div>:
+        <p>No Messages Found</p>
+        }
       </div>
     </div>
   );
